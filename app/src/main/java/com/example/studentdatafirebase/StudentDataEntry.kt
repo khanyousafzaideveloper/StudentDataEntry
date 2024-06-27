@@ -2,6 +2,7 @@ package com.example.studentdatafirebase
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,6 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import java.lang.reflect.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState")
@@ -23,7 +27,7 @@ fun DataEntryForm(){
     var gender by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
 
-    Column {
+    Column() {
 
 
         Text(
@@ -52,4 +56,10 @@ fun DataEntryForm(){
         }
     }
 
+}
+
+@Preview
+@Composable
+fun EnterDataPreview(){
+    EnterDataPreview()
 }
