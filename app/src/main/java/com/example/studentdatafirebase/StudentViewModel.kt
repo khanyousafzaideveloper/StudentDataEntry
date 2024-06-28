@@ -22,11 +22,12 @@ sealed interface StudentRecordUiState {
 }
 
 data class StudentRecord(
+    val id: String ="",
     val name: String = "",
     val rollNo: String = "",
     val gender: String="",
     val phoneNo:String=""
-){constructor() : this("", "", "", "")}
+){constructor() : this("","", "", "", "")}
 class StudentViewModel: ViewModel(){
 
     var name by mutableStateOf("")
@@ -51,9 +52,26 @@ class StudentViewModel: ViewModel(){
             .add(student)
             .addOnSuccessListener { documentReference ->
                 Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                name = ""
+                rollNo =""
+                gender = ""
+                phoneNumber = ""
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
+            }
+    }
+
+
+    fun deleteStudentRecord(studentId: String) {
+        val db = Firebase.firestore
+        db.collection("Students").document(studentId)
+            .delete()
+            .addOnSuccessListener {
+                Log.d("Firestore", "DocumentSnapshot successfully deleted!")
+            }
+            .addOnFailureListener { e ->
+                Log.w("Firestore", "Error deleting document", e)
             }
     }
 
@@ -70,21 +88,32 @@ class StudentViewModel: ViewModel(){
                         return@addSnapshotListener
                     }
 
-                    if ((snapshot != null) && !snapshot.isEmpty) {
-                        val StudentListObjects = snapshot.toObjects(StudentRecord::class.java)
-                        _studentRecordUiState.value = StudentRecordUiState.Success(StudentListObjects)
+                    if (snapshot != null && !snapshot.isEmpty) {
+                        val studentList = snapshot.documents.map { document ->
+                            val student = document.toObject(StudentRecord::class.java)!!
+                            student.copy(id = document.id)
+                        }
+                        _studentRecordUiState.value = StudentRecordUiState.Success(studentList)
                     } else {
                         _studentRecordUiState.value = StudentRecordUiState.Success(emptyList())
                     }
                 }
-                name = ""
-                rollNo =""
-                gender = ""
-                phoneNumber = ""
             } catch (exception: Exception) {
                 Log.w(ContentValues.TAG, "Error getting documents", exception)
                 _studentRecordUiState.value = StudentRecordUiState.Error
             }
         }
+    }
+
+    fun updateStudentRecord(studentId: String, newData: Map<String, Any>) {
+        val db = Firebase.firestore
+        db.collection("Students").document(studentId)
+            .update(newData)
+            .addOnSuccessListener {
+                Log.d("Firestore", "DocumentSnapshot successfully updated!")
+            }
+            .addOnFailureListener { e ->
+                Log.w("Firestore", "Error updating document", e)
+            }
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,8 +22,8 @@ import com.example.civicengagementplatform.ui.LoadingScreen
 @Composable
 fun RetrieveDataCard(){
 
-    val viewModel: StudentViewModel = viewModel()
-    val studentRecordUiState by viewModel.studentRecordUiState
+    val studentViewModel: StudentViewModel = viewModel()
+    val studentRecordUiState by studentViewModel.studentRecordUiState
 
     when (studentRecordUiState) {
         is StudentRecordUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
@@ -37,12 +38,11 @@ fun RetrieveDataCard(){
 
 @Composable
 fun StudentList(students: List<StudentRecord>){
-
-
     LazyColumn() {
         items(students.size) { index ->
             StudentCard(
-             record = students[index]
+             record = students[index],
+                onCick = {}
             )
         }
     }
@@ -50,13 +50,19 @@ fun StudentList(students: List<StudentRecord>){
 }
 
 @Composable
-fun StudentCard(record: StudentRecord){
-    Card(modifier = Modifier.fillMaxWidth() .padding(8.dp)){
+fun StudentCard(record: StudentRecord, onCick: ()->Unit){
+    val studentViewModel: StudentViewModel = viewModel()
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(8.dp)){
         Column {
             Text(text = "Name: ${record.name}")
             Text(text = "Roll Number: ${record.rollNo}")
             Text(text = "Gender: ${record.gender}")
             Text(text = " Phone Number: ${record.phoneNo}")
+            Button(onClick = { studentViewModel.deleteStudentRecord(record.id) }) {
+                Text("Delete")
+            }
         }
     }
 }
