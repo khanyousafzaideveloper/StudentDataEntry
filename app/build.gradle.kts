@@ -62,6 +62,14 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.firebase.firestore)
+
+    val nav_version = "2.7.7"
+
+    implementation ("androidx.navigation:navigation-compose:$nav_version")
+
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
+    implementation ("androidx.activity:activity-compose:1.6.1")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
