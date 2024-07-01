@@ -2,7 +2,7 @@ package com.example.studentdatafirebase
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.Row
 
 import androidx.compose.foundation.layout.padding
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -29,8 +30,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
@@ -45,7 +44,7 @@ fun Pages() {
     val currentScreen = currentDestination?.route ?: StudentRecordScreens.RetrievedData.name
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     if(currentScreen==StudentRecordScreens.RetrievedData.name){
                         Text("Student Records")
@@ -70,8 +69,31 @@ fun Pages() {
                     onClick = { navController.navigate(StudentRecordScreens.AddData.name) },
                 ) {
                     Row() {
-                        Text(text = "Add Student", fontWeight = FontWeight(700), fontSize = 15.sp, modifier = Modifier.align(Alignment.CenterVertically) .padding(start= 8.dp))
-                        Icon(Icons.Default.Add, contentDescription = "Add", modifier = Modifier.size(30.dp) .padding(end =4.dp) .align(Alignment.CenterVertically))
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Add",
+                            modifier = Modifier
+                                .size(30.dp)
+                                .align(
+                                    Alignment.CenterVertically
+                                )
+                                .padding(
+                                    start= 4.dp
+                                )
+                        )
+                        Text(
+                            text = "Add Student",
+                            fontWeight = FontWeight(700),
+                            fontSize = 15.sp,
+                            modifier = Modifier
+                                .align(
+                                    Alignment.CenterVertically
+                                )
+                                .padding(
+                                    start= 4.dp,
+                                    end = 4.dp
+                                )
+                        )
                     }
                 }
             }

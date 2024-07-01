@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.messaging)
 
     val nav_version = "2.7.7"
 
@@ -69,6 +70,16 @@ dependencies {
 
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
     implementation ("androidx.activity:activity-compose:1.6.1")
+
+    // firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+
+    // messaging
+    implementation("com.google.firebase:firebase-messaging-ktx:24.0.0")
+
+    // notification permission
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

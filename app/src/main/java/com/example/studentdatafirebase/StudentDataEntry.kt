@@ -1,6 +1,12 @@
 package com.example.studentdatafirebase
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +25,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,7 +42,10 @@ fun DataEntryForm(){
 
         Text(
             text = "Add Student Details",
-            modifier = Modifier.padding(8.dp) .fillMaxWidth() .align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
         )
         TextField(
             value = viewModel.name,
@@ -56,6 +68,7 @@ fun DataEntryForm(){
                     text = "Student Roll Number",
                 )
             },
+           // isError = viewModel.rollNo.isEmpty(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier
                 .padding(8.dp)
@@ -95,13 +108,17 @@ fun DataEntryForm(){
                         Toast.makeText(
                             context,
                             "Data Submitted Successfully!",
-                            Toast.LENGTH_SHORT).show()
-                                },
-                    onError = {
-                        errorMessage -> Toast.makeText(
-                        context,
-                        errorMessage,
-                        Toast.LENGTH_SHORT).show()
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        viewModel.sendNotification(context, "New Student","Name: ${viewModel.name}")
+                    },
+                    onError = { errorMessage ->
+                        Toast.makeText(
+                            context,
+                            errorMessage,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 )
                       },
@@ -119,3 +136,4 @@ fun DataEntryForm(){
 fun EnterDataPreview(){
     EnterDataPreview()
 }
+

@@ -1,6 +1,9 @@
 package com.example.studentdatafirebase
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,22 +12,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,12 +37,38 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.civicengagementplatform.ui.ErrorScreen
 import com.example.civicengagementplatform.ui.LoadingScreen
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun RetrieveDataCard(){
+
+    val showNotificationDialog = remember { mutableStateOf(false) }
+
+    // Android 13 Api 33 - runtime notification permission has been added
+    val notificationPermissionState = rememberPermissionState(
+        permission = Manifest.permission.POST_NOTIFICATIONS
+    )
+    if (showNotificationDialog.value) FirebaseMessagingNotificationPermissionDialog(
+        showNotificationDialog = showNotificationDialog,
+        notificationPermissionState = notificationPermissionState
+    )
+
+    LaunchedEffect(key1=Unit){
+        if (notificationPermissionState.status.isGranted ||
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+        ) {
+            Firebase.messaging.subscribeToTopic("Tutorial")
+        } else showNotificationDialog.value = true
+    }
+
 
     val studentViewModel: StudentViewModel = viewModel()
     val studentRecordUiState by studentViewModel.studentRecordUiState
@@ -56,6 +82,17 @@ fun RetrieveDataCard(){
                 studentViewModel.updateStudentRecord()
             }
         )
+    }
+    
+    if(studentViewModel.showDeleteDialog){
+        DeleteConfirmation(
+            student = studentViewModel.studentToDelete,
+            onConfirm =  {deleteStudent ->
+                studentViewModel.studentToDelete = deleteStudent
+                studentViewModel.deleteStudentRecord(deleteStudent.id)
+        }
+        ) { studentViewModel.showDeleteDialog = false }
+
     }
 
     when (studentRecordUiState) {
@@ -169,7 +206,7 @@ fun StudentCard(record: StudentRecord, onExpandClick: () -> Unit,  isExpanded: B
 
                     ) {
                         Button(
-                            onClick = { studentViewModel.deleteStudentRecord(record.id) },
+                            onClick = { studentViewModel.showDeleteDialog(record) },
                             modifier = Modifier
                                 .padding(4.dp)
                                 .weight(1f)
