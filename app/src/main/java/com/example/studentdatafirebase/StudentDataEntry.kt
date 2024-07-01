@@ -1,7 +1,9 @@
 package com.example.studentdatafirebase
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,7 +12,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,37 +25,93 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun DataEntryForm(){
+    val context = LocalContext.current
     val viewModel: StudentViewModel = viewModel()
-    Column(modifier = Modifier.padding(4.dp) .fillMaxWidth()) {
-
+    Column(modifier = Modifier
+        .padding(8.dp)
+        .fillMaxSize()) {
 
         Text(
-            text = "Enter Your Student Record Here"
+            text = "Add Student Details",
+            modifier = Modifier.padding(8.dp) .fillMaxWidth() .align(Alignment.CenterHorizontally)
         )
         TextField(
             value = viewModel.name,
             onValueChange = { viewModel.name = it },
+            label = {
+                Text(
+                    text = "Student Name",
+                )
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, capitalization = KeyboardCapitalization.Words),
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
         )
         TextField(
             value = viewModel.rollNo,
             onValueChange = { viewModel.rollNo = it },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            label = {
+                Text(
+                    text = "Student Roll Number",
+                )
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
         )
         TextField(
-            value = viewModel.gender,
-            onValueChange = { viewModel.gender = it }
+            value = viewModel.major,
+            onValueChange = { viewModel.major = it },
+            label = {
+                Text(
+                    text = "Student Major",
+                )
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, capitalization = KeyboardCapitalization.Words),
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
         )
         TextField(
             value = viewModel.phoneNumber,
             onValueChange = { viewModel.phoneNumber = it },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            label = {
+                Text(
+                    text = "Student Phone",
+                )
+            },
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
         )
 
-        Button(onClick = { viewModel.onSubmitForm() }) {
-            Text(text = "Submit")
+        Button(
+            onClick = {
+                viewModel.onSubmitForm(
+                    onSuccess = {
+                        Toast.makeText(
+                            context,
+                            "Data Submitted Successfully!",
+                            Toast.LENGTH_SHORT).show()
+                                },
+                    onError = {
+                        errorMessage -> Toast.makeText(
+                        context,
+                        errorMessage,
+                        Toast.LENGTH_SHORT).show()
+                    }
+                )
+                      },
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+        ) {
+            Text(text = "Save Record")
         }
     }
-
 }
 
 @Preview

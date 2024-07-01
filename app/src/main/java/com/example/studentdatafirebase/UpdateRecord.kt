@@ -1,7 +1,18 @@
 package com.example.studentdatafirebase
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateStudentDialog(
     student: StudentRecord,
@@ -10,7 +21,7 @@ fun UpdateStudentDialog(
 ) {
     var name by remember { mutableStateOf(student.name) }
     var rollNo by remember { mutableStateOf(student.rollNo) }
-    var gender by remember { mutableStateOf(student.gender) }
+    var major by remember { mutableStateOf(student.major) }
     var phoneNo by remember { mutableStateOf(student.phoneNo) }
 
     AlertDialog(
@@ -29,9 +40,9 @@ fun UpdateStudentDialog(
                     label = { Text("Roll No") }
                 )
                 TextField(
-                    value = gender,
-                    onValueChange = { gender = it },
-                    label = { Text("Gender") }
+                    value = major,
+                    onValueChange = { major = it },
+                    label = { Text("Major") }
                 )
                 TextField(
                     value = phoneNo,
@@ -46,7 +57,7 @@ fun UpdateStudentDialog(
                     val updatedStudent = student.copy(
                         name = name,
                         rollNo = rollNo,
-                        gender = gender,
+                        major = major,
                         phoneNo = phoneNo
                     )
                     onConfirm(updatedStudent)

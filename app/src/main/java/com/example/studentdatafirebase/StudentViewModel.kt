@@ -25,40 +25,46 @@ data class StudentRecord(
     val id: String ="",
     val name: String = "",
     val rollNo: String = "",
-    val gender: String="",
+    val major: String="",
     val phoneNo:String=""
 ){constructor() : this("","", "", "", "")}
 class StudentViewModel: ViewModel(){
 
     var name by mutableStateOf("")
     var rollNo by mutableStateOf("")
-    var gender by  mutableStateOf("")
+    var major by  mutableStateOf("")
     var phoneNumber by mutableStateOf("")
     val db = Firebase.firestore
+
+
+    var showUpdateDialog by mutableStateOf(false)
+    var studentToUpdate by mutableStateOf(StudentRecord())
 
     private val _studentRecordUiState = mutableStateOf<StudentRecordUiState>(StudentRecordUiState.Loading)
     val studentRecordUiState: State<StudentRecordUiState> = _studentRecordUiState
 
-    fun onSubmitForm(){
+    fun onSubmitForm(onSuccess: () -> Unit, onError: (String) -> Unit){
 
 
         val student = hashMapOf(
             "name" to name,
             "rollNo" to rollNo,
-            "gender" to gender,
+            "major" to major,
             "phoneNo" to phoneNumber
         )
         db.collection("Students")
             .add(student)
             .addOnSuccessListener { documentReference ->
                 Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                onSuccess()
                 name = ""
                 rollNo =""
-                gender = ""
+                major = ""
                 phoneNumber = ""
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
+                error(e)
             }
     }
 
@@ -105,15 +111,28 @@ class StudentViewModel: ViewModel(){
         }
     }
 
-    fun updateStudentRecord(studentId: String, newData: Map<String, Any>) {
-        val db = Firebase.firestore
-        db.collection("Students").document(studentId)
-            .update(newData)
+    fun updateStudentRecord() {
+        val studentMap = hashMapOf(
+            "name" to studentToUpdate.name,
+            "rollNo" to studentToUpdate.rollNo,
+            "major" to studentToUpdate.major,
+            "phoneNo" to studentToUpdate.phoneNo
+        )
+
+        db.collection("Students").document(studentToUpdate.id)
+            .set(studentMap)
             .addOnSuccessListener {
                 Log.d("Firestore", "DocumentSnapshot successfully updated!")
+                showUpdateDialog = false
             }
             .addOnFailureListener { e ->
                 Log.w("Firestore", "Error updating document", e)
             }
+    }
+
+
+    fun showUpdateDialog(student: StudentRecord) {
+        studentToUpdate = student
+        showUpdateDialog = true
     }
 }
