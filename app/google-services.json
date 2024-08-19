@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "313716234072",
+    "project_id": "studentdata-c77a8",
+    "storage_bucket": "studentdata-c77a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313716234072:android:c1afe2c92ad0240abf772d",
+        "android_client_info": {
+          "package_name": "com.example.studentdatafirebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_gbbb2rz3ix7oh_ZKzehJyFil1jfP5Jw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313716234072:android:13e17ca7ce0bce75bf772d",
+        "android_client_info": {
+          "package_name": "com.myTodoApp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_gbbb2rz3ix7oh_ZKzehJyFil1jfP5Jw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

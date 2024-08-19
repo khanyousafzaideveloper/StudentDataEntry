@@ -1,12 +1,14 @@
 package com.example.studentdatafirebase
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.State
@@ -39,6 +41,8 @@ data class StudentRecord(
 ){constructor() : this("","", "", "", "")}
 class StudentViewModel: ViewModel(){
 
+    var imageUri by mutableStateOf<Uri?>(null)
+
     var name by mutableStateOf("")
     var rollNo by mutableStateOf("")
     var major by  mutableStateOf("")
@@ -55,6 +59,7 @@ class StudentViewModel: ViewModel(){
     private val _studentRecordUiState = mutableStateOf<StudentRecordUiState>(StudentRecordUiState.Loading)
     val studentRecordUiState: State<StudentRecordUiState> = _studentRecordUiState
 
+    @SuppressLint("SuspiciousIndentation")
     fun onSubmitForm(onSuccess: () -> Unit, onError: (String) -> Unit){
 
         val student = hashMapOf(
